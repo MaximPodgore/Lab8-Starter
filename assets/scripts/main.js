@@ -2,12 +2,12 @@
 
 // CONSTANTS
 const RECIPE_URLS = [
-    'https://adarsh249.github.io/Lab8-Starter/recipes/1_50-thanksgiving-side-dishes.json',
-    'https://adarsh249.github.io/Lab8-Starter/recipes/2_roasting-turkey-breast-with-stuffing.json',
-    'https://adarsh249.github.io/Lab8-Starter/recipes/3_moms-cornbread-stuffing.json',
-    'https://adarsh249.github.io/Lab8-Starter/recipes/4_50-indulgent-thanksgiving-side-dishes-for-any-holiday-gathering.json',
-    'https://adarsh249.github.io/Lab8-Starter/recipes/5_healthy-thanksgiving-recipe-crockpot-turkey-breast.json',
-    'https://adarsh249.github.io/Lab8-Starter/recipes/6_one-pot-thanksgiving-dinner.json',
+  'https://adarsh249.github.io/Lab8-Starter/recipes/1_50-thanksgiving-side-dishes.json',
+  'https://adarsh249.github.io/Lab8-Starter/recipes/2_roasting-turkey-breast-with-stuffing.json',
+  'https://adarsh249.github.io/Lab8-Starter/recipes/3_moms-cornbread-stuffing.json',
+  'https://adarsh249.github.io/Lab8-Starter/recipes/4_50-indulgent-thanksgiving-side-dishes-for-any-holiday-gathering.json',
+  'https://adarsh249.github.io/Lab8-Starter/recipes/5_healthy-thanksgiving-recipe-crockpot-turkey-breast.json',
+  'https://adarsh249.github.io/Lab8-Starter/recipes/6_one-pot-thanksgiving-dinner.json',
 ];
 
 // Run the init() function when the page has loaded
@@ -45,6 +45,18 @@ function initializeServiceWorker() {
   // We first must register our ServiceWorker here before any of the code in
   // sw.js is executed.
   // B1. TODO - Check if 'serviceWorker' is supported in the current browser
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", (event) => {
+      try {
+        const registration = navigator.serviceWorker.register("/sw.js", {
+          scope: "/",
+        });
+        console.log("Service Worker registered successfully");
+      } catch (error) {
+        console.error(`Service Worker registration failed`);
+      }
+    });
+  }
   // B2. TODO - Listen for the 'load' event on the window object.
   // Steps B3-B6 will be *inside* the event listener's function created in B2
   // B3. TODO - Register './sw.js' as a service worker (The MDN article
@@ -85,16 +97,16 @@ async function getRecipes() {
     // Promise logic goes here
     RECIPE_URLS.forEach(async (url) => {
       try {
-      const response = await fetch(url);
-      const recipe = await response.json();
-      recipesArray.push(recipe);
-      if (recipesArray.length === RECIPE_URLS.length) {
-        saveRecipesToStorage(recipesArray);
-        resolve(recipesArray);
-      }
+        const response = await fetch(url);
+        const recipe = await response.json();
+        recipesArray.push(recipe);
+        if (recipesArray.length === RECIPE_URLS.length) {
+          saveRecipesToStorage(recipesArray);
+          resolve(recipesArray);
+        }
       } catch (error) {
-      console.error(error);
-      reject(error);
+        console.error(error);
+        reject(error);
       }
     });
   });
